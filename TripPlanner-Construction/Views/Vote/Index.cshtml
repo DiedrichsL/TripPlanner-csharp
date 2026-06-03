@@ -1,0 +1,137 @@
+﻿@using TripPlanner_Construction.Entités
+@model List<TripPlanner_Construction.Entités.Proposition>
+
+@{
+    TripPlanner_Construction.Entités.Voyage voyage = ViewBag.Voyage;
+}
+
+<div class="container mt-4">
+
+    <div class="mb-4">
+        <h1 class="fw-bold">Votes</h1>
+        <p class="text-muted">Choisissez vos propositions préférées pour ce voyage</p>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold">@voyage.Destination</h5>
+            <p class="mb-2">
+                <strong>Dates :</strong>
+                @voyage.DateDebut - @voyage.DateFin
+            </p>
+
+            @if (voyage.StatutVote == "Fermé")
+            {
+                <span class="badge bg-danger">Vote fermé</span>
+            }
+            else
+            {
+                <span class="badge bg-success">Vote ouvert</span>
+            }
+        </div>
+    </div>
+
+    @{
+        var categories = Model
+            .GroupBy(p => p.TypeProposition)
+            .ToList();
+    }
+
+    @foreach (var categorie in categories)
+    {
+        <h3 class="fw-bold mt-4 mb-3">@categorie.Key</h3>
+
+        @foreach (var proposition in categorie)
+        {
+            bool dejaVote = false;
+
+            if (Context.Session.GetString("id") != null && proposition.Votes != null)
+            {
+                int utilisateurId = int.Parse(Context.Session.GetString("id"));
+
+                dejaVote = proposition.Votes.Any(v =>
+                    v.UtilsateurId == utilisateurId &&
+                    v.EstActif);
+            }
+
+            int nombreVotes = proposition.Votes != null
+                ? proposition.Votes.Count(v => v.EstActif)
+                : 0;
+
+            string borderClass = proposition.EstRetenue ? "border-success" : "border";
+
+            <div class="card shadow-sm mb-3 @borderClass">
+                <div class="card-body">
+
+                    @if (proposition.EstRetenue)
+                    {
+                        <span class="badge bg-success mb-2">Proposition retenue</span>
+                    }
+
+                    <div class="d-flex justify-content-between align-items-start">
+
+                        <div>
+                            <h5 class="fw-bold mb-2">@proposition.Titre</h5>
+
+                            <p class="mb-2">
+                                @proposition.Description
+                            </p>
+
+                            <p class="mb-0">
+                                <strong>Prix estimé :</strong> @proposition.PrixEstime CHF
+                            </p>
+                        </div>
+
+                        <div class="text-end ms-3">
+                            <span class="badge bg-primary mb-2">
+                                @nombreVotes votes
+                            </span>
+
+                            @if (voyage.StatutVote == "Fermé")
+                            {
+                                <button class="btn btn-secondary btn-sm d-block mt-2" disabled>
+                                    Vote fermé
+                                </button>
+                            }
+                            else if (dejaVote)
+                            {
+                                <form asp-controller="Vote" asp-action="RetirerVote" method="post">
+                                    <input type="hidden" name="propositionId" value="@proposition.Id" />
+                                    <input type="hidden" name="voyageId" value="@voyage.Id" />
+
+                                    <button type="submit" class="btn btn-outline-danger btn-sm d-block mt-2">
+                                        Retirer mon vote
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Vote" asp-action="Create" method="post">
+                                    <input type="hidden" name="propositionId" value="@proposition.Id" />
+                                    <input type="hidden" name="voyageId" value="@voyage.Id" />
+
+                                    <button type="submit" class="btn btn-primary btn-sm d-block mt-2">
+                                        Voter
+                                    </button>
+                                </form>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    }
+
+    <div class="d-flex gap-3 mt-4">
+        <a asp-controller="Voyage"
+               asp-action="Details"
+               asp-route-id="@voyage.Id"
+               class="btn btn-tripplanner">
+            Retour au voyage
+        </a>
+
+ 
+    </div>
+
+</div>

@@ -1,0 +1,59 @@
+﻿@model TripPlanner_Construction.Entités.Proposition
+
+@{
+    ViewData["Title"] = "Modifier une proposition";
+}
+
+<div class="container mt-5" style="max-width: 500px;">
+    <h2 class="fw-bold">Modifier une proposition</h2>
+    <p class="text-muted">Modifiez votre activité, hébergement ou transport</p>
+
+    <div class="card p-4 shadow-sm">
+        <form asp-action="Edit" method="post">
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="VoyageId" />
+            <input type="hidden" asp-for="UtilisateurId" />
+            <input type="hidden" asp-for="EstRetenue" />
+
+            <div class="mb-3">
+                <label asp-for="Titre" class="form-label">Titre</label>
+                <input asp-for="Titre" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TypeProposition" class="form-label">Type</label>
+                <select asp-for="TypeProposition" class="form-select">
+                    <option value="">Choisir</option>
+                    <option value="Activité">Activité</option>
+                    <option value="Hébergement">Hébergement</option>
+                    <option value="Transport">Transport</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="PrixEstime" class="form-label">Prix estimé</label>
+                <input asp-for="PrixEstime" class="form-control" />
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-tripplanner">
+                    Sauvegarder
+                </button>
+
+                <a asp-controller="Voyage"
+                       asp-action="Details"
+                       asp-route-id="@Model.VoyageId"
+                       class="btn btn-outline-secondary">
+                    Retour
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>

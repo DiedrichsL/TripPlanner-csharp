@@ -1,0 +1,101 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Connexion - TripPlanner</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+<body style="background-color:#0f172a;">
+
+    <div class="container vh-100 d-flex justify-content-center align-items-center">
+
+        <div class="card shadow-lg border-0 p-4"
+             style="width: 450px; border-radius:20px;">
+
+            <div class="text-center mb-4">
+
+               
+
+                <h1 class="fw-bold"
+                    style="color:#0f172a;">
+                    Trip Planner
+                </h1>
+
+                <p class="text-muted">
+                    Connectez-vous à votre espace voyage
+                </p>
+
+            </div>
+
+            <form method="post"
+                  asp-controller="Login"
+                  asp-action="Connexion">
+
+                <div class="mb-3">
+
+                    <label class="form-label fw-semibold">
+                        Utilisateur
+                    </label>
+
+                    <input type="text"
+                           name="utilisateur"
+                           class="form-control form-control-lg"
+                           placeholder="Votre email"
+                           required />
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label fw-semibold">
+                        Mot de passe
+                    </label>
+
+                    <input type="password"
+                           name="motdepasse"
+                           class="form-control form-control-lg"
+                           placeholder="********"
+                           required />
+
+                </div>
+
+                <button type="submit"
+                       class="btn btn-tripplanner">
+
+                    Se connecter
+
+                </button>
+
+            </form>
+
+            <div class="text-center mt-4">
+
+                <span class="text-muted">
+                    Pas encore de compte ?
+                </span>
+
+                <a asp-controller="Login"
+                   asp-action="Register"
+                   class="text-decoration-none fw-bold">
+
+                    Créer un compte
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

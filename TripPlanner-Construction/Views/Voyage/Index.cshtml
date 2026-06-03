@@ -1,0 +1,88 @@
+﻿@model IEnumerable<TripPlanner_Construction.Entités.Voyage>
+<div class="text-center mb-5">
+  
+
+    <h1 class="display-5 fw-bold text-dark mb-2">
+        Mes voyages
+    </h1>
+
+    <p class="text-muted fs-5">
+        Retrouvez et gérez tous vos voyages en un seul endroit
+    </p>
+</div>
+
+<a asp-action="Create" class="btn btn-tripplanner mb-3">
+    Créer un nouveau voyage
+</a>
+
+
+<div class="table-tripplanner-wrapper">
+
+    <table class="table table-tripplanner align-middle">
+    <thead class="table-Dark">
+        <tr>
+            <th>Destination</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Délai pour voter</th>
+            <th>Statut du vote</th>
+            <th>Action</th>
+        </tr>
+
+       
+    </thead>
+
+    <tbody>
+        @foreach (var voyage in Model)
+        {
+            <tr>
+                    <td>
+                        <a asp-action="Details"
+                               asp-route-id="@voyage.Id"
+                               class="trip-link">
+                            @voyage.Destination
+                        </a>
+                    </td>
+                <td>@voyage.DateDebut</td>
+                <td>@voyage.DateFin</td>
+                <td>@voyage.DatelimiteVote</td>
+                <td>
+                    @if (voyage.StatutVote == "Ouvert")
+                    {
+                        <span class="badge bg-success">
+                            ● Ouvert
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">
+                            ● Fermé
+                        </span>
+                    }
+
+                    <td>
+                            @if (voyage.Organisateurid == int.Parse(Context.Session.GetString("id")))
+                            {
+                                <a asp-action="Edit"
+                                       asp-route-id="@voyage.Id"
+                                       class="btn btn-tripplanner">
+                                    Modifier
+                                </a>
+
+                                <form asp-action="Delete"
+                                      asp-route-id="@voyage.Id"
+                                      method="post"
+                                      class="d-inline">
+                                    <button type="submit"
+                                            class="btn btn-tripplanner"
+                                            onclick="return confirm('Voulez-vous vraiment supprimer ce voyage ?');">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            }
+                    </td>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

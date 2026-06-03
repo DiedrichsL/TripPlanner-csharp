@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="TripPlanner-Construction/TripPlanner.web.csproj" Id="f6fd48ae-6dc5-4fbf-a5bb-6c1767c1e249" />
   <Project Path="TripPlanner/TripPlanner.csproj" />
 </Solution>

@@ -1,0 +1,119 @@
+﻿@{
+    ViewData["Title"] = "Accueil";
+}
+
+<section class="py-5 min-vh-100 d-flex align-items-center">
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h1 class="display-2 fw-bold mb-4">
+                TripPlanner
+            </h1>
+
+            <p class="fs-3 text-muted mx-auto" style="max-width: 900px;">
+                Organisez facilement vos voyages en groupe,
+                proposez des idées et votez ensemble pour créer
+                le voyage parfait.
+            </p>
+
+        </div>
+
+        <div class="row g-4 mb-5">
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="card-body p-5 text-center">
+                        <h2 class="fw-bold mb-4">Créez</h2>
+                        <p class="fs-5 text-muted">
+                            Créez un voyage avec une destination, des dates
+                            et une date limite pour les votes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="card-body p-5 text-center">
+                        <h2 class="fw-bold mb-4">Proposez</h2>
+                        <p class="fs-5 text-muted">
+                            Ajoutez des idées d’activités, d’hébergements
+                            ou de transports pour organiser le voyage.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-lg h-100">
+                    <div class="card-body p-5 text-center">
+                        <h2 class="fw-bold mb-4">Votez</h2>
+                        <p class="fs-5 text-muted">
+                            Votez pour les meilleures propositions afin de choisir
+                            les options retenues pour le voyage.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bg-light rounded-4 p-5 mb-5 shadow-sm">
+
+            <h2 class="display-6 fw-bold text-center mb-5">
+                Une application pensée pour les voyages en groupe
+            </h2>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <ul class="list-unstyled fs-5 mb-0">
+                        <li class="mb-4">✅ Création et gestion de voyages</li>
+                        <li class="mb-4">✅ Gestion des participants</li>
+                        <li class="mb-4">✅ Propositions par catégorie</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-6">
+                    <ul class="list-unstyled fs-5 mb-0">
+                        <li class="mb-4">✅ Système de vote</li>
+                        <li class="mb-4">✅ Choix des propositions retenues</li>
+                        <li class="mb-4">✅ Interface simple et intuitive</li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="text-center mt-5">
+
+            <h2 class="display-5 fw-bold mb-4">
+                Commencez maintenant
+            </h2>
+
+            <p class="fs-4 text-muted mb-5">
+                Créez un compte ou connectez-vous pour commencer à organiser vos voyages.
+            </p>
+
+            <div class="d-flex justify-content-center gap-4 flex-wrap">
+
+                <a asp-controller="Login"
+                   asp-action="Register"
+                       class="btn-tripplanner">
+                    Créer un compte
+                </a>
+
+                <a asp-controller="Login"
+                   asp-action="Login"
+                       class="btn-tripplanner">
+                    Se connecter
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>

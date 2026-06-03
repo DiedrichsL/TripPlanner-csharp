@@ -1,0 +1,291 @@
+﻿@model TripPlanner_Construction.Entités.Voyage
+
+<div class="mb-4">
+    <h1 class="fw-bold">
+        Voyage à @Model.Destination
+    </h1>
+
+    <p class="text-muted">
+        Consultez les informations du voyage et les propositions du groupe
+    </p>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+
+       
+          
+        
+
+
+    
+        
+        <h5 class="card-title mb-4">
+            Informations du voyage
+        </h5>
+
+        <div class="row g-4">
+
+            <div class="col-md-3">
+                <h6 class="text-muted">Date de début</h6>
+
+                <p class="fw-semibold">
+                    @Model.DateDebut
+                </p>
+            </div>
+
+            <div class="col-md-3">
+                <h6 class="text-muted">Date de fin</h6>
+
+                <p class="fw-semibold">
+                    @Model.DateFin
+                </p>
+            </div>
+
+            <div class="col-md-3">
+                <h6 class="text-muted">Délai pour voter</h6>
+
+                <p class="fw-semibold">
+                    @Model.DatelimiteVote
+                </p>
+            </div>
+
+            <div class="col-md-3">
+                <h6 class="text-muted">Statut du vote</h6>
+
+                @if (Model.StatutVote == "Ouvert")
+                {
+                    <span class="badge bg-success">
+                        ● Ouvert
+                    </span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">
+                        ● Fermé
+                    </span>
+                }
+
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+
+        <h5 class="card-title mb-4">
+            Participants
+        </h5>
+        @if (ViewBag.EstOrganisateur == true)
+                    {
+                        <form asp-controller="Participation"
+                        asp-action="Create"
+                        method="post"
+                        class="d-flex gap-2 mb-4">
+
+                            <input type="hidden"
+                            name="VoyageId"
+                            value="@Model.Id" />
+
+                            <input type="email"
+                            name="Email"
+                            class="form-control"
+                            placeholder="Email du participant" />
+
+                            <button type="submit"
+                            class="btn btn-tripplanner">
+                                Ajouter
+                            </button>
+
+                        </form>
+                        @if (TempData["ErreurParticipant"] != null)
+                        {
+                            <div class="text-danger mt-2">
+                                @TempData["ErreurParticipant"]
+                            </div>
+                        }
+                    }
+
+                    @if (ViewBag.Participations.Count == 0)
+        {
+            <p class="text-muted">
+                Aucun participant pour ce voyage
+            </p>
+        }
+        else
+        {
+            <ul class="list-group">
+                            @foreach (var participation in ViewBag.Participations)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                                    <span>
+                                        @participation.Utilisateur.Prenom @participation.Utilisateur.Nom
+                                    </span>
+
+                                    @if (ViewBag.EstOrganisateur == true)
+                                    {
+                                        <form asp-controller="Participation"
+                                              asp-action="RetirerParticipant"
+                                              method="post"
+                                              class="d-inline">
+
+                                            <input type="hidden"
+                                                   name="participationId"
+                                                   value="@participation.Id" />
+
+                                            <input type="hidden"
+                                                   name="voyageId"
+                                                   value="@Model.Id" />
+
+                                            <button type="submit"
+                                                    class="btn btn-outline-danger btn-sm">
+                                                Retirer
+                                            </button>
+                                        </form>
+                                    }
+
+                                </li>
+                            }
+            </ul>
+        }
+
+    </div>
+</div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+
+    <div class="card-body">
+
+        <h5 class="card-title mb-4">
+            Propositions
+        </h5>
+
+        @if (ViewBag.Propositions.Count == 0)
+        {
+            <p class="text-muted">
+                Aucune proposition pour ce voyage
+            </p>
+        }
+        else
+        {
+            @foreach (var proposition in ViewBag.Propositions)
+            {
+
+               
+
+                @if (ViewBag.EstOrganisateur == true || proposition.UtilisateurId == ViewBag.UtilisateurId)
+                {
+                    
+                    <form asp-controller="Proposition"
+                          asp-action="SupprimerProposition"
+                          method="post"
+                          class="d-inline">
+
+                        <input type="hidden" name="propositionId" value="@proposition.Id" />
+                        <input type="hidden" name="voyageId" value="@Model.Id" />
+
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Supprimer
+                        </button>
+                    </form>
+                }
+                <div class="card border-0 shadow-sm mb-3">
+
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between align-items-start">
+
+                            <div>
+
+                                <h5 class="fw-bold mb-3">
+                                    @proposition.Titre
+                                </h5>
+
+                                <p class="mb-3">
+                                    @proposition.Description
+                                </p>
+
+                                <p class="mb-2">
+                                    <strong>Type :</strong>
+                                    @proposition.TypeProposition
+                                </p>
+
+                                <p class="mb-0">
+                                    <strong>Prix estimé :</strong>
+                                    @proposition.PrixEstime CHF
+                                </p>
+
+
+
+                            </div>
+
+                            @if (ViewBag.EstOrganisateur == true ||
+       proposition.UtilisateurId == ViewBag.UtilisateurId)
+                            {
+                                <a asp-controller="Proposition"
+                                       asp-action="Edit"
+                                       asp-route-id="@proposition.Id"
+                                       class="btn btn-tripplanner btn-sm">
+                                    Modifier
+                                </a>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+        }
+
+    </div>
+
+</div>
+
+<div class="d-flex gap-3">
+
+    <a asp-action="Index"
+       class="btn btn-tripplanner">
+        Retour aux voyages
+    </a>
+
+    @if (Model.StatutVote != "Fermé")
+    {
+        <a asp-controller="Proposition"
+               asp-action="Create"
+               asp-route-voyageId="@Model.Id"
+               class="btn btn-tripplanner">
+            Ajouter une proposition
+        </a>
+    }
+
+   
+        <a asp-controller="Vote"
+               asp-action="Index"
+               asp-route-voyageId="@Model.Id"
+               class="btn btn-tripplanner">
+            Accéder aux votes
+        </a>
+ 
+
+    <form asp-controller="Participation"
+          asp-action="QuitterVoyage"
+          method="post"
+          class="d-inline">
+
+        <input type="hidden"
+               name="voyageId"
+               value="@Model.Id" />
+
+        <button type="submit"
+                class="btn btn-outline-danger">
+            Quitter le voyage
+        </button>
+
+    </form>
+
+</div>

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using TripPlanner.Entités;
 
-namespace TripPlanner;
+namespace TripPlanner_Construction.Entités;
 
 public partial class TripPlannerContext : DbContext
 {
@@ -34,13 +33,15 @@ public partial class TripPlannerContext : DbContext
     {
         modelBuilder.Entity<Participation>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Particip__3214EC07DADE16AA");
+            entity.HasKey(e => e.Id).HasName("PK__Particip__3214EC07D287FF11");
 
             entity.ToTable("Participation");
 
             entity.HasIndex(e => new { e.UtilisateurId, e.VoyageId }, "UQ_Participation_Utilisateur_Voyage").IsUnique();
 
-            entity.HasIndex(e => e.Id, "UQ__Particip__3214EC0667A73379").IsUnique();
+            entity.HasIndex(e => e.Id, "UQ__Particip__3214EC06176D7BF7").IsUnique();
+
+            entity.Property(e => e.EstActif).HasDefaultValue(true);
 
             entity.HasOne(d => d.Utilisateur).WithMany(p => p.Participations)
                 .HasForeignKey(d => d.UtilisateurId)
@@ -55,7 +56,7 @@ public partial class TripPlannerContext : DbContext
 
         modelBuilder.Entity<Proposition>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Proposit__3214EC07D96C1D37");
+            entity.HasKey(e => e.Id).HasName("PK__Proposit__3214EC07DF130BF8");
 
             entity.ToTable("Proposition");
 
@@ -63,8 +64,9 @@ public partial class TripPlannerContext : DbContext
                 .IsUnique()
                 .HasFilter("([EstRetenue]=(1))");
 
-            entity.HasIndex(e => e.Id, "UQ__Proposit__3214EC069827A9E7").IsUnique();
+            entity.HasIndex(e => e.Id, "UQ__Proposit__3214EC067AA7DD8A").IsUnique();
 
+            entity.Property(e => e.EstActif).HasDefaultValue(true);
             entity.Property(e => e.PrixEstime).HasColumnType("decimal(18, 0)");
             entity.Property(e => e.TypeProposition).HasMaxLength(50);
 
@@ -81,22 +83,32 @@ public partial class TripPlannerContext : DbContext
 
         modelBuilder.Entity<Utilisateur>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Utilisat__3214EC07E508D566");
+            entity.HasKey(e => e.Id).HasName("PK__Utilisat__3214EC07916D786A");
 
             entity.ToTable("Utilisateur");
 
-            entity.HasIndex(e => e.Id, "UQ__Utilisat__3214EC06C37C8F0C").IsUnique();
+            entity.HasIndex(e => e.Id, "UQ__Utilisat__3214EC062E9F1B0E").IsUnique();
+
+            entity.HasIndex(e => e.Email, "UQ__Utilisat__A9D105344757428C").IsUnique();
+
+            entity.Property(e => e.Email).HasMaxLength(255);
+            entity.Property(e => e.EstActif).HasDefaultValue(true);
+            entity.Property(e => e.Role)
+                .HasMaxLength(50)
+                .HasDefaultValue("Utilisateur");
         });
 
         modelBuilder.Entity<Vote>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Vote__3214EC073BC24153");
+            entity.HasKey(e => e.Id).HasName("PK__Vote__3214EC07868EB6A6");
 
             entity.ToTable("Vote");
 
             entity.HasIndex(e => new { e.UtilsateurId, e.PropositionId }, "UQ_Vote_Utilisateur_Proposition").IsUnique();
 
-            entity.HasIndex(e => e.Id, "UQ__Vote__3214EC06B5124D35").IsUnique();
+            entity.HasIndex(e => e.Id, "UQ__Vote__3214EC06654C6937").IsUnique();
+
+            entity.Property(e => e.EstActif).HasDefaultValue(true);
 
             entity.HasOne(d => d.Proposition).WithMany(p => p.Votes)
                 .HasForeignKey(d => d.PropositionId)
@@ -111,11 +123,18 @@ public partial class TripPlannerContext : DbContext
 
         modelBuilder.Entity<Voyage>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Voyage__3214EC07DCA15D3F");
+            entity.HasKey(e => e.Id).HasName("PK__Voyage__3214EC07A7F1D054");
 
             entity.ToTable("Voyage");
 
-            entity.HasIndex(e => e.Id, "UQ__Voyage__3214EC06765B9A07").IsUnique();
+            entity.HasIndex(e => e.Id, "UQ__Voyage__3214EC06E324FF5D").IsUnique();
+
+            entity.Property(e => e.EstActif).HasDefaultValue(true);
+
+            entity.HasOne(d => d.Organisateur).WithMany(p => p.Voyages)
+                .HasForeignKey(d => d.Organisateurid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Voyage_fk1");
         });
 
         OnModelCreatingPartial(modelBuilder);
